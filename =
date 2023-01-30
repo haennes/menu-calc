@@ -4,6 +4,14 @@
 # Calculator for use with rofi/dmenu(2)
 # Copying to the clipboard requires xclip
 
+copy_to_clipboard() {
+	if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+		wl-copy "$1"
+	else
+		xclip -selection clipboard "$1"
+	fi
+}
+
 usage() {
     echo "$(tput bold)menu-calc$(tput sgr0)"
     echo "A calculator for Rofi/dmenu(2)"
@@ -76,7 +84,7 @@ action=$(echo -e "Copy to clipboard\nClear\nClose" | $menu "$@" -p "= $answer")
 
 case $action in
     "Clear") $0 "--dmenu=$menu" "--" "$@" ;;
-    "Copy to clipboard") echo -n "$answer" | xclip -selection clipboard ;;
+    "Copy to clipboard") copy_to_clipboard "$answer" ;;
     "Close") ;;
     "") ;;
     *) $0 "$answer $action" "--dmenu=$menu" "--" "$@" ;;
