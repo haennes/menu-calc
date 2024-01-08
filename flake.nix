@@ -15,12 +15,7 @@
           pname = "menucalc";
           version = "v1.3.0";
 
-          src = pkgs.fetchFromGitHub {
-            owner = "sumnerevans";
-            repo = "menu-calc";
-            rev = "1728157d4e06966f6ecfcd5c5cb1216291a0ff78";
-            sha256 = "sha256-Gx5SXg20mYvz0jZTmelJZIuI8hNEWSt+cViPSMl4W6Q=";
-          };
+          src = ./.;
 
           buildInputs = [ pkgs.makeWrapper ];
           dontBuild = true;
