@@ -12,6 +12,34 @@ A calculator for Rofi/dmenu(2)
 sudo make install
 ```
 
+### Nix Flake
+
+This repository is a Nix flake. You can add this repo as an input to your Nix
+flake.
+
+```nix
+inputs.menucalc.url = "github:sumnerevans/menu-calc";
+```
+
+If you want to follow your own nixpkgs version:
+
+```nix
+inputs.menucalc = {
+  url = "github:sumnerevans/menu-calc";
+  inputs.nixpkgs.follows = "nixpkgs";
+};
+```
+
+And then use it like:
+
+```nix
+outputs = { ..., menucalc }: {
+  ...
+  menucalc.packages.x86_64-linux.menucalc
+  ...
+};
+```
+
 ### Arch Linux AUR
 
 [menu-calc](https://aur.archlinux.org/packages/menu-calc/)
