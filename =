@@ -4,6 +4,7 @@
 # Calculator for use with rofi/dmenu(2)
 # Copying to the clipboard requires xclip
 
+
 copy_to_clipboard() {
   if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
     wl-copy "$1"
@@ -22,6 +23,13 @@ usage() {
   echo "    = 4^2"
   echo "    = sqrt(4)"
   echo "    = c(2)"
+  echo
+  echo "$(tput bold)change calculator:$(tput sgr0)"
+  echo
+  echo "By default it will be bc. To change it to another one use"
+  echo " --calculator argument"
+  echo
+  echo " = --calculator=<calculator_command>"
   echo
   echo "$(tput bold)Force Rofi/dmenu(2):$(tput sgr0)"
   echo "By default, if rofi exists, it will be used. To force menu-calc to"
@@ -48,12 +56,20 @@ do
     -d=*|--dmenu=*)
       menu=$(echo "$var" | cut -d'=' -f 2);
       ;;
+    --calculator=*)
+      calc=$(echo "$var" | cut -d'=' -f 2);
+    ;;
     --) break ;;
   esac
 done
 
+
+#set bc as default
+if [ -z "${calc}" ]; then
+  calc="bc -l"
+fi
 # Grab the answer
-answer=$(echo "$1" | bc -l | sed '/\./ s/\.\{0,1\}0\{1,\}$//')
+answer=$(echo "$1" | $calc | sed '/\./ s/\.\{0,1\}0\{1,\}$//')
 
 # Path to menu application
 if [ -z "${menu+1}" ]; then
@@ -83,9 +99,9 @@ done
 action=$(echo -e "Copy to clipboard\nClear\nClose" | $menu "$@" -p "= $answer")
 
 case $action in
-  "Clear") $0 "--dmenu=$menu" "--" "$@" ;;
+  "Clear") $0 "--dmenu=$menu" "--calculator=$calc" "--" "$@" ;;
   "Copy to clipboard") copy_to_clipboard "$answer" ;;
   "Close") ;;
   "") ;;
-  *) $0 "$answer $action" "--dmenu=$menu" "--" "$@" ;;
+  *) $0 "$answer $action" "--dmenu=$menu" "--calculator=$calc" "--" "$@" ;;
 esac

@@ -13,7 +13,7 @@ menu-calc \- A calculator for
 .BR menu-calc
 uses
 .BR bc (1)
-as the backend and will accept any operations
+(by default) as the backend and will accept any operations
 .BR bc (1)
 is able to do.
 The answer can be copied to the clipboard and used for further calculations
@@ -49,15 +49,16 @@ Examples of performing math operations in menu-calc:
 .TP
 Bind \fBdmenu\fR(1) with a variety of parameters to F4 in \fBi3wm\fR(1).
 .B bindsym F4 exec = --dmenu=dmenu -- -i -fn 'Isoveka Term 10' -dim 0.5 -l 3
-
+.TP
+use \fBfend\fR(1) instead of bc
+.B = --calculator=fend
 .SH OPTIONS
 .TP
 .B \-h
 show help
 .TP
-.B <bc-math-expression>
-Parameters to be passed to
-.BR bc (1) .
+.B <math-expression>
+Parameters to be passed to the configured calculator
 .TP
 .B --dmenu=<dmenu_executable>
 Set the dmenu-compatible executable. This can be used to force menu-calc to use
@@ -68,6 +69,9 @@ Parameters to be passed to
 .BR rofi (1)
 /
 .BR dmenu (1) .
+.TP
+.B --calculator=<calculator_command>
+Set the calculator command. Use this to change to another calculator backend.
 
 .SH AUTHOR
 Jonathan Sumner Evans <sumner.evans98 at gmail dot com>

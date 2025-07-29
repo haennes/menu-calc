@@ -10,8 +10,8 @@
   outputs = { self, nixpkgs, flake-utils }:
     (flake-utils.lib.eachDefaultSystem (system:
       let pkgs = import nixpkgs { inherit system; };
-      in rec {
-        packages.menucalc = pkgs.stdenv.mkDerivation rec {
+      derivation-attrs = backend_pkg: backend_cmd:
+ rec {
           pname = "menucalc";
           version = "v1.3.0";
 
@@ -29,11 +29,11 @@
           '';
 
           wrapperPath =
-            pkgs.lib.makeBinPath (with pkgs; [ bc rofi xclip wl-clipboard ]);
+            pkgs.lib.makeBinPath (with pkgs; [ backend_pkg rofi xclip wl-clipboard ]);
 
           fixupPhase = ''
             patchShebangs $out/bin
-            wrapProgram $out/bin/= --prefix PATH : "${wrapperPath}"
+            wrapProgram $out/bin/= --prefix PATH : "${wrapperPath}" --add-flags "--calculator=${backend_cmd}"
           '';
 
           meta = {
@@ -44,9 +44,12 @@
             platforms = with pkgs.lib.platforms; linux;
           };
         };
+      in rec {
+        packages.menucalc = pkgs.stdenv.mkDerivation (derivation-attrs pkgs.bc "bc -l");
+        packages.menucalc-fend = pkgs.stdenv.mkDerivation (derivation-attrs pkgs.fend "fend");
         packages.default = packages.menucalc;
 
         devShells.default =
-          pkgs.mkShell { packages = with pkgs; [ bc pre-commit shellcheck ]; };
+          pkgs.mkShell { packages = with pkgs; [ bc fend pre-commit shellcheck ]; };
       }));
 }
