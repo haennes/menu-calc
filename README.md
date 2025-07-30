@@ -40,6 +40,8 @@ outputs = { ..., menucalc }: {
 };
 ```
 
+If you want to use fend as an backend just use the package menucalc-fend
+
 ### Arch Linux AUR
 
 [menu-calc](https://aur.archlinux.org/packages/menu-calc/)
@@ -86,3 +88,11 @@ By default, if `rofi` is installed, it will be used. You can force `menu-calc`
 to use `dmenu` or any other `dmenu`-like application:
 
     = --dmenu=dmenu
+
+### Change calculator backend
+
+By default [bc](https://www.gnu.org/software/bc/manual/html_mono/bc.html)
+is used, alternatively a custom command (e.g. [fend](https://github.com/printfn/fend))
+can be used instead
+
+    = --calculator=fend
